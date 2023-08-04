@@ -8,9 +8,23 @@ from bs4 import BeautifulSoup
 train_info=pickle.load(open('train_info.pkl','rb'))
 similarity=pickle.load(open('similarity.pkl','rb'))
 train_nums=pickle.load(open('train_nums.pkl','rb'))
+station_code=pickle.load(open('station_code.pkl','rb'))
 st.title('Best Train Recommender')
-source=st.text_input('Source Station')
-des=st.text_input('Destination Station')
+s=st.selectbox(
+     'Select Source Station: ',
+     station_code['Station name'].values)
+d=st.selectbox(
+     'Select Destination Station: ',
+     station_code['Station name'].values)
+s_idx=0
+d_idx=0
+for i in range(len(station_code)):
+    if(station_code['Station name'][i]==s):
+        s_idx=i
+    if (station_code['Station name'][i] == d):
+        d_idx = i
+source=station_code['Station code'][s_idx]
+des=station_code['Station code'][d_idx]
 train_numbers=[]
 def recommend(from_station,to_station):
     API_URL = "https://apis.ausoftwaresolutions.in/v1/train-between-stations/"
@@ -56,17 +70,22 @@ def recommend(from_station,to_station):
     #print(ans)
     return train_nums[ans]
 if st.button('Recommend'):
-    number=recommend(source,des)
-    if (number[0] == '0'):
-        url = 'https://www.confirmtkt.com/train-ratings-reviews/0%d' % int(number)
-    else:
-        url = 'https://www.confirmtkt.com/train-ratings-reviews/%d' % int(number)
-    response = requests.get(url).text
-    soup = BeautifulSoup(response, 'lxml')
-    soup.prettify()
-    r = soup.find('span', itemprop='itemreviewed')
-    st.write("")
-    st.write(r.text)
+    try:
+        number=recommend(source,des)
+        if (number[0] == '0'):
+            url = 'https://www.confirmtkt.com/train-ratings-reviews/0%d' % int(number)
+        else:
+            url = 'https://www.confirmtkt.com/train-ratings-reviews/%d' % int(number)
+        response = requests.get(url).text
+        soup = BeautifulSoup(response, 'lxml')
+        soup.prettify()
+        r = soup.find('span', itemprop='itemreviewed')
+        st.write("")
+        st.write(r.text)
+
+    except:
+        st.write("Try with different station!")
+
     #st.write(r.text)
 #print(train_info)
 print('exit')
