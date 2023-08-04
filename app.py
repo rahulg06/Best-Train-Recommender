@@ -8,7 +8,7 @@ from bs4 import BeautifulSoup
 train_info=pickle.load(open('train_info.pkl','rb'))
 similarity=pickle.load(open('similarity.pkl','rb'))
 train_nums=pickle.load(open('train_nums.pkl','rb'))
-station_code=pickle.load(open('station_code.pkl','rb'))
+station_code=pickle.load(open('station_code_n.pkl','rb'))
 st.title('Best Train Recommender')
 s=st.selectbox(
      'Select Source Station: ',
@@ -82,8 +82,6 @@ if st.button('Recommend'):
         r = soup.find('span', itemprop='itemreviewed')
         st.write("")
         st.write(r.text)
-        st.write(s_idx)
-        st.write(d_idx)
 
     except:
         st.write("Try with different station!")
