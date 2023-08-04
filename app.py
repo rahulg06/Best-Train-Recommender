@@ -12,10 +12,10 @@ station_code=pickle.load(open('station_code.pkl','rb'))
 st.title('Best Train Recommender')
 s=st.selectbox(
      'Select Source Station: ',
-     station_code['Station name'].values)
+     station_code['Station name'].values,index=3088)
 d=st.selectbox(
      'Select Destination Station: ',
-     station_code['Station name'].values)
+     station_code['Station name'].values,index=2038)
 s_idx=0
 d_idx=0
 for i in range(len(station_code)):
@@ -82,6 +82,8 @@ if st.button('Recommend'):
         r = soup.find('span', itemprop='itemreviewed')
         st.write("")
         st.write(r.text)
+        st.write(s_idx)
+        st.write(d_idx)
 
     except:
         st.write("Try with different station!")
